@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "archisteamfarm.fullname" . }}
+  labels:
+    {{- include "archisteamfarm.labels" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: 1242
+      targetPort: 1242
+      protocol: TCP
+      name: ipc
+  selector:
+    {{- include "archisteamfarm.selectorLabels" . | nindent 4 }}

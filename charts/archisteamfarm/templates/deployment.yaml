@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "archisteamfarm.fullname" . }}
+  labels:
+    {{- include "archisteamfarm.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "archisteamfarm.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "archisteamfarm.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        - name: {{ .Chart.Name }}-init
+          image: {{ .Values.initImage.repository }}:{{ .Values.initImage.tag }}
+          imagePullPolicy: {{ .Values.initImage.pullPolicy }}
+          command: ["sh", "-c", "if [ ! -f /config/ASF.json ]; then echo -e '{\"IPCPassword\": \"{{ .Values.initialPassword }}\", \"SteamOwnerID\": {{ .Values.steamId }} }' >/config/ASF.json; fi; if [ ! -f /config/IPC.config ]; then echo -e '{\"Kestrel\": {\"Endpoints\": {\"HTTP\": {\"Url\": \"http://*:1242\"} } } }' >/config/IPC.config; fi"]
+          volumeMounts:
+            - mountPath: /config
+              name: config
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: ipc
+              containerPort: 1242
+              protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 1242
+              scheme: HTTP
+            initialDelaySeconds: 2
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 1242
+              scheme: HTTP
+            initialDelaySeconds: 2
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - mountPath: /app/config
+              name: config
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: {{ include "archisteamfarm.fullname" . }}-config
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

@@ -1,0 +1,54 @@
+categories:
+  - ArchiSteamFarm
+questions:
+  - variable: hostname
+    label: Hostname
+    default: ""
+    required: true
+    type: string
+    group: ArchiSteamFarm Options
+  - variable: initialPassword
+    label: Initial IPC Password
+    default: ""
+    type: password
+    required: true
+    group: ArchiSteamFarm Options
+  - variable: steamId
+    label: Steam Owner ID
+    default: 0
+    type: string
+    valid_chars: "0-9"
+    group: ArchiSteamFarm Options
+  - variable: certmanager.enabled
+    label: Use CertManager
+    default: true
+    type: boolean
+    group: Ingress
+    show_subquestion_if: true
+    subquestions:
+      - variable: certmanager.issuerType
+        label: Issuer Type
+        default: ClusterIssuer
+        type: string
+      - variable: certmanager.issuerName
+        label: Issuer Name
+        default: letsencrypt
+        type: string
+  - variable: persistence.size
+    label: Storage Size
+    default: 1Gi
+    type: string
+    group: Persistence
+  - variable: persistence.storageClass
+    label: Storage Class
+    default: ""
+    type: storageclass
+  - variable: persistence.accessMode
+    label: Access Mode
+    default: ReadWriteOnce
+    type: enum
+    options:
+      - ReadWriteOnce
+      - ReadOnlyMany
+      - ReadWriteMany
+      - ReadWriteOncePod

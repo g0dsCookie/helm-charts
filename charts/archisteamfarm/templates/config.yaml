@@ -6,7 +6,8 @@ data:
   ASF.json: |
     {
       "IPCPassword": {{ .Values.initialPassword | quote }},
-      "SteamOwnerID": {{ .Values.steamId }}
+      "SteamOwnerID": {{ .Values.steamId }},
+      "Headless": true
     }
   IPC.config: |
     {

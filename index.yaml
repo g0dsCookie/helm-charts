@@ -3,6 +3,17 @@ entries:
   archisteamfarm:
   - apiVersion: v2
     appVersion: 5.2.5.4
+    created: "2022-05-02T11:46:49.494038184Z"
+    description: C# application with primary purpose of farming Steam cards from multiple accounts simultaneously.
+    digest: b084a78333ef53c0e75dab1c4de839859a974d964a1e1ba74d3881c146694c67
+    icon: https://justarchinet.github.io/ASF-WebConfigGenerator/media/logo.png
+    name: archisteamfarm
+    type: application
+    urls:
+    - https://github.com/g0dsCookie/helm-charts/releases/download/archisteamfarm-0.2.1/archisteamfarm-0.2.1.tgz
+    version: 0.2.1
+  - apiVersion: v2
+    appVersion: 5.2.5.4
     created: "2022-05-02T10:26:15.620695145Z"
     description: C# application with primary purpose of farming Steam cards from multiple accounts simultaneously.
     digest: 4903b6722f593463afc44c02375ff86ff05c791e1afe0fa9127b693af97cb374

@@ -43,6 +43,7 @@ questions:
     label: Storage Class
     default: ""
     type: storageclass
+    group: Persistence
   - variable: persistence.accessMode
     label: Access Mode
     default: ReadWriteOnce
@@ -52,3 +53,4 @@ questions:
       - ReadOnlyMany
       - ReadWriteMany
       - ReadWriteOncePod
+    group: Persistence

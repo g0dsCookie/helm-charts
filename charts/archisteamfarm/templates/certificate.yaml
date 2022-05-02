@@ -9,11 +9,8 @@ spec:
   secretName: {{ include "archisteamfarm.fullname" . }}-certificate
   # re-new certificate when it expires in less than 60 days
   renewBefore: 1440h0m0s
-  commonName: "{{ first (required "hostname" .Values.certmanager.hosts) }}"
-  dnsNames:
-{{- range .Values.certmanager.hosts }}
-  - "{{ . }}"
-{{- end }}
+  commonName: {{ .Values.hostname }}
+  dnsNames: [{{ .Values.hostname }}]
   issuerRef:
     kind: {{ .Values.certmanager.issuerType }}
     name: {{ .Values.certmanager.issuerName }}

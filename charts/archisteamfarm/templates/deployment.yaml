@@ -24,13 +24,15 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
-        - name: {{ .Chart.Name }}-init
+        - name: init-config
           image: {{ .Values.initImage.repository }}:{{ .Values.initImage.tag }}
           imagePullPolicy: {{ .Values.initImage.pullPolicy }}
-          command: ["sh", "-c", "if [ ! -f /config/ASF.json ]; then echo -e '{\"IPCPassword\": \"{{ .Values.initialPassword }}\", \"SteamOwnerID\": {{ .Values.steamId }} }' >/config/ASF.json; fi; if [ ! -f /config/IPC.config ]; then echo -e '{\"Kestrel\": {\"Endpoints\": {\"HTTP\": {\"Url\": \"http://*:1242\"} } } }' >/config/IPC.config; fi"]
+          command: ["sh", "-c", "for i in /init/*; do if [ -f \"$i\" ] && [ ! -f \"/config/$(basename \"$i\")\" ]; then cp -v \"$i\" \"/config/$(basename \"$i\")\"; chmod 755 \"/config/$(basename \"$i\")\"; fi; done"]
           volumeMounts:
             - mountPath: /config
               name: config
+            - mountPath: /init
+              name: init
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -70,6 +72,9 @@ spec:
         - name: config
           persistentVolumeClaim:
             claimName: {{ include "archisteamfarm.fullname" . }}-config
+        - name: init
+          configMap:
+            name: {{ include "archisteamfarm.fullname" . }}-init-config
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

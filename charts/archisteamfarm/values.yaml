@@ -54,9 +54,7 @@ certmanager:
   issuerType: ClusterIssuer
   issuerName: letsencrypt
   apiVersion: cert-manager.io/v1
-  secretName: asf.example.org
-  hosts:
-    - asf.example.org
+  hosts: [asf.example.org]
 
 persistence:
   size: 1Gi

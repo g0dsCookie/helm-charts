@@ -3,5 +3,5 @@ name: archisteamfarm
 icon: https://justarchinet.github.io/ASF-WebConfigGenerator/media/logo.png
 description: C# application with primary purpose of farming Steam cards from multiple accounts simultaneously.
 type: application
-version: 0.2.1
+version: 0.2.2
 appVersion: "5.2.5.4"

@@ -185,16 +185,17 @@ questions:
     default: false
     type: boolean
     group: MySQL
+    show_if: "mysql.enabled=false"
   - variable: passbolt.datasource.password
     label: Password
     type: password
     group: MySQL
-    show_if: "passbolt.datasource.password_as_secret=false"
+    show_if: "mysql.enabled=false&&passbolt.datasource.password_as_secret=false"
   - variable: passbolt.datasource.password_secret
     label: Password Secret
     type: secret
     group: MySQL
-    show_if: "passbolt.datasource.password_as_secret=true"
+    show_if: "mysql.enabled=false&&passbolt.datasource.password_as_secret=true"
   - variable: mysql.persistence.enabled
     label: Enable Persistence
     type: boolean

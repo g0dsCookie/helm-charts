@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "passbolt.fullname" . }}-mysql
+  labels:
+    {{- include "passbolt.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "passbolt.selectorLabels" . | nindent 6 }}
+      helm.sh/app: mysql
+  template:
+    metadata:
+      {{- with .Values.mysql.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "passbolt.selectorLabels" . | nindent 8 }}
+        helm.sh/app: mysql
+    spec:
+      {{- with .Values.mysql.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.mysql.podSecurityContext | nindent 8 }}
+      containers:
+        - name: mysql
+          image: "{{ .Values.mysql.image.repository }}:{{ .Values.mysql.image.tag }}"
+          imagePullPolicy: {{ .Values.mysql.image.pullPolicy }}
+          ports:
+            - name: mysql
+              containerPort: 3306
+              protocol: TCP
+          env:
+            - name: MARIADB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ include "passbolt.fullname" . }}-secrets"
+                  key: mysql_root
+            - name: MARIADB_DATABASE
+              value: passbolt
+            - name: MARIADB_USER
+              value: passbolt
+            - name: MARIADB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ include "passbolt.fullname" . }}-secrets"
+                  key: mysql
+          volumeMounts:
+            {{- if .Values.mysql.persistence.enabled }}
+            - name: data
+              mountPath: /var/lib/mysql
+            {{- end }}
+          resources:
+            {{- toYaml .Values.mysql.resources | nindent 12 }}
+          securityContext:
+            {{- toYaml .Values.mysql.securityContext | nindent 12 }}
+      volumes:
+        {{- if .Values.mysql.persistence.enabled }}
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ default (printf "%s-mysql" (include "passbolt.fullname" .)) .Values.mysql.persistence.existingClaim | quote }}
+        {{- end }}
+      {{- with .Values.mysql.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.mysql.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.mysql.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

@@ -1,0 +1,19 @@
+passbolt:
+  persistence:
+    gpg:
+      enabled: true
+      storageClassName: hostpath
+    jwt:
+      enabled: true
+      storageClassName: hostpath
+
+mysql:
+  persistence:
+    enabled: true
+    storageClassName: hostpath
+
+hostname: localhost
+certmanager:
+  issuerName: selfsigned
+ingress:
+  className: nginx

@@ -1,0 +1,169 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "passbolt.fullname" . }}
+  labels:
+    {{- include "passbolt.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "passbolt.selectorLabels" . | nindent 6 }}
+      helm.sh/app: passbolt
+  template:
+    metadata:
+      {{- with .Values.passbolt.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "passbolt.selectorLabels" . | nindent 8 }}
+        helm.sh/app: passbolt
+    spec:
+      {{- with .Values.passbolt.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.passbolt.podSecurityContext | nindent 8 }}
+      {{- if or .Values.passbolt.persistence.gpg.enabled (and .Values.passbolt.jwt.enabled .Values.passbolt.persistence.jwt.enabled) }}
+      initContainers:
+        - name: fix-permissions
+          image: busybox:1.34
+          command: ['sh', '-c', 'chown -f 33:33 /etc/passbolt/gpg /etc/passbolt/jwt && chmod -f 0700 /etc/passbolt/gpg /etc/passbolt/jwt']
+          volumeMounts:
+            {{- if .Values.passbolt.persistence.gpg.enabled }}
+            - name: gpg
+              mountPath: /etc/passbolt/gpg
+            {{- end }}
+            {{- if and .Values.passbolt.persistence.jwt.enabled .Values.passbolt.jwt.enabled }}
+            - name: jwt
+              mountPath: /etc/passbolt/jwt
+            {{- end }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.passbolt.image.repository }}:{{ .Values.passbolt.image.tag | default .Chart.AppVersion }}-{{ .Values.passbolt.type }}-non-root"
+          imagePullPolicy: {{ .Values.passbolt.image.pullPolicy }}
+          env:
+            - name: APP_FULL_BASE_URL
+              value: "https://{{ .Values.hostname }}"
+            - name: PASSBOLT_SSL_FORCE
+              value: "true"
+            - name: SECURITY_SALT
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ include "passbolt.fullname" . }}-secrets"
+                  key: salt
+            {{- if .Values.mysql.enabled }}
+            - name: DATASOURCES_DEFAULT_HOST
+              value: "passbolt-mysql"
+            - name: DATASOURCES_DEFAULT_USERNAME
+              value: "passbolt"
+            - name: DATASOURCES_DEFAULT_DATABASE
+              value: "passbolt"
+            - name: DATASOURCES_DEFAULT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ include "passbolt.fullname" . }}-secrets"
+                  key: mysql
+            {{- else }}
+            - name: DATASOURCES_DEFAULT_HOST
+              value: {{ .Values.passbolt.datasource.host | quote }}
+            - name: DATASOURCES_DEFAULT_USERNAME
+              value: {{ .Values.passbolt.datasource.username | quote }}
+            - name: DATASOURCES_DEFAULT_DATABASE
+              value: {{ .Values.passbolt.datasource.database | quote }}
+            - name: DATASOURCES_DEFAULT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Values.passbolt.datasource.password_secret }}"
+                  key: "{{ .Values.passbolt.datasource.password_secret_key }}"
+            {{- end }}
+            - name: EMAIL_DEFAULT_FROM
+              value: {{ .Values.passbolt.email.from | quote }}
+            - name: EMAIL_TRANSPORT_DEFAULT_HOST
+              value: {{ .Values.passbolt.email.host | quote }}
+            - name: EMAIL_TRANSPORT_DEFAULT_PORT
+              value: {{ .Values.passbolt.email.port | quote }}
+            - name: EMAIL_TRANSPORT_DEFAULT_TLS
+              value: {{ .Values.passbolt.email.tls | quote }}
+            {{- if and .Values.passbolt.email.username (or .Values.passbolt.email.password .Values.passbolt.email.password_secret) }}
+            - name: EMAIL_TRANSPORT_DEFAULT_USERNAME
+              value: {{ .Values.passbolt.email.username | quote }}
+            - name: EMAIL_TRANSPORT_DEFAULT_PASSWORD
+            {{- if .Values.passbolt.email.password }}
+              value: {{ .Values.passbolt.email.password | quote }}
+            {{- else }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.passbolt.email.password_secret | quote }}
+                  key: {{ default "password" .Values.passbolt.datasource.password_secret_key | quote }}
+            {{- end }}
+            {{- end }}
+            - name: PASSBOLT_KEY_NAME
+              value: {{ .Values.passbolt.key.name | quote }}
+            - name: PASSBOLT_KEY_EMAIL
+              value: {{ .Values.passbolt.key.email | quote }}
+            - name: PASSBOLT_KEY_LENGTH
+              value: {{ .Values.passbolt.key.length | quote }}
+            - name: PASSBOLT_SUBKEY_LENGTH
+              value: {{ .Values.passbolt.key.subkey_length | quote }}
+            {{- if .Values.passbolt.jwt.enabled }}
+            - name: PASSBOLT_PLUGINS_JWT_AUTHENTICATION_ENABLED
+              value: "TRUE"
+            {{- if .Values.passbolt.jwt.mobileEnabled }}
+            - name: PASSBOLT_PLUGINS_MOBILE_ENABLED
+              value: "TRUE"
+            {{- end }}
+            {{- end }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+            - name: https
+              containerPort: 4433
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          volumeMounts:
+            {{- if .Values.passbolt.persistence.gpg.enabled }}
+            - name: gpg
+              mountPath: /etc/passbolt/gpg
+            {{- end }}
+            {{- if and .Values.passbolt.persistence.jwt.enabled .Values.passbolt.jwt.enabled }}
+            - name: jwt
+              mountPath: /etc/passbolt/jwt
+            {{- end }}
+          resources:
+            {{- toYaml .Values.passbolt.resources | nindent 12 }}
+          securityContext:
+            {{- toYaml .Values.passbolt.securityContext | nindent 12 }}
+      volumes:
+        {{- if .Values.passbolt.persistence.gpg.enabled }}
+        - name: gpg
+          persistentVolumeClaim:
+            claimName: {{ default (printf "%s-gpg" (include "passbolt.fullname" .)) .Values.passbolt.persistence.gpg.existingClaim | quote }}
+        {{- end }}
+        {{- if and .Values.passbolt.persistence.jwt.enabled .Values.passbolt.jwt.enabled }}
+        - name: jwt
+          persistentVolumeClaim:
+            claimName: {{ default (printf "%s-jwt" (include "passbolt.fullname" .)) .Values.passbolt.persistence.jwt.existingClaim | quote }}
+        {{- end }}
+      {{- with .Values.passbolt.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.passbolt.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.passbolt.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

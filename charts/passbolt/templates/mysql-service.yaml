@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "passbolt.fullname" . }}-mysql
+  labels:
+    {{- include "passbolt.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.mysql.service.type }}
+  ports:
+    - port: {{ .Values.mysql.service.port }}
+      targetPort: mysql
+      protocol: TCP
+      name: mysql
+  selector:
+    {{- include "passbolt.selectorLabels" . | nindent 4 }}
+    helm.sh/app: mysql

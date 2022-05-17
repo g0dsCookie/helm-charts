@@ -1,0 +1,37 @@
+{{- if .Values.ingress.enabled -}}
+
+{{- $fullName := include "passbolt.fullname" . -}}
+{{- $hostname := .Values.hostname -}}
+{{- $svcPort := .Values.passbolt.service.http -}}
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ $fullName }}
+  labels:
+    {{- include "passbolt.labels" . | nindent 4 }}
+  {{- with .Values.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  ingressClassName: {{ .Values.ingress.className }}
+  tls:
+    - hosts: [{{ $hostname }}]
+      {{- if .Values.certmanager.enabled }}
+      secretName: {{ $fullName }}-certificate
+      {{- else }}
+      secretName: {{ .Values.certificateSecret }}
+      {{- end }}
+  rules:
+    - host: {{ $hostname }}
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ $fullName }}
+                port:
+                  number: {{ $svcPort }}
+{{- end }}

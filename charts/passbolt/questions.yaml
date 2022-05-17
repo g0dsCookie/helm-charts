@@ -1,0 +1,255 @@
+categories:
+  - passbolt
+  - password
+  - manager
+questions:
+  - variable: hostname
+    label: Hostname
+    default: ""
+    required: true
+    type: hostname
+    group: Passbolt
+  - variable: passbolt.type
+    label: Type
+    default: ce
+    type: enum
+    options:
+      - ce
+      - pro
+    group: Passbolt
+
+  - variable: passbolt.key.name
+    label: Name
+    type: string
+    required: true
+    group: GPG Server Key
+  - variable: passbolt.key.email
+    label: Name
+    type: string
+    required: true
+    group: GPG Server Key
+  - variable: passbolt.key.length
+    label: Key Length
+    type: int
+    default: 4096
+    min: 2048
+    max: 8192
+    group: GPG Server Key
+  - variable: passbolt.key.subkey_length
+    label: Subkey Length
+    type: int
+    default: 4096
+    min: 2048
+    max: 8192
+    group: GPG Server Key
+  - variable: passbolt.persistence.gpg.enabled
+    label: Enable Persistence
+    type: boolean
+    default: false
+    group: GPG Server Key
+    show_subquestion_if: true
+    subquestions:
+      - variable: passbolt.persistence.gpg.use_existingClaim
+        label: Use Existing Claim
+        type: boolean
+        default: false
+      - variable: passbolt.persistence.gpg.existingClaim
+        label: Existing Claim
+        type: pvc
+        show_if: "passbolt.persistence.gpg.use_existingClaim=true"
+      - variable: passbolt.persistence.gpg.size
+        label: Storage Size
+        default: 500Mi
+        type: string
+        show_if: "passbolt.persistence.gpg.use_existingClaim=false"
+      - variable: passbolt.persistence.gpg.storageClassName
+        label: Storage Class
+        type: storageclass
+        show_if: "passbolt.persistence.gpg.use_existingClaim=false"
+      - variable: passbolt.persistence.gpg.accessMode
+        label: Access Mode
+        type: enum
+        options:
+          - ReadWriteOnce
+          - ReadOnlyMany
+          - ReadWriteMany
+          - ReadWriteOncePod
+        show_if: "passbolt.persistence.gpg.use_existingClaim=false"
+
+  - variable: passbolt.jwt.enabled
+    label: Enabled
+    type: boolean
+    default: true
+    group: JWT
+  - variable: passbolt.jwt.mobileEnabled
+    label: Allow Mobile Devices
+    type: boolean
+    default: true
+    show_if: "passbolt.jwt.enabled=true"
+    group: JWT
+  - variable: passbolt.persistence.jwt.enabled
+    label: Enable Persistence
+    type: boolean
+    default: false
+    group: JWT
+    show_subquestion_if: true
+    subquestions:
+      - variable: passbolt.persistence.jwt.use_existingClaim
+        label: Use Existing Claim
+        type: boolean
+        default: false
+      - variable: passbolt.persistence.jwt.existingClaim
+        label: Existing Claim
+        type: pvc
+        show_if: "passbolt.persistence.jwt.use_existingClaim=true"
+      - variable: passbolt.persistence.jwt.size
+        label: Storage Size
+        default: 500Mi
+        type: string
+        show_if: "passbolt.persistence.jwt.use_existingClaim=false"
+      - variable: passbolt.persistence.jwt.storageClassName
+        label: Storage Class
+        type: storageclass
+        show_if: "passbolt.persistence.jwt.use_existingClaim=false"
+      - variable: passbolt.persistence.jwt.accessMode
+        label: Access Mode
+        type: enum
+        options:
+          - ReadWriteOnce
+          - ReadOnlyMany
+          - ReadWriteMany
+          - ReadWriteOncePod
+        show_if: "passbolt.persistence.jwt.use_existingClaim=false"
+
+  - variable: passbolt.email.from
+    label: From
+    default: passbolt@example.org
+    type: string
+    group: Mail Settings
+  - variable: passbolt.email.host
+    label: Host
+    default: smtp.example.org
+    type: string
+    group: Mail Settings
+  - variable: passbolt.email.port
+    label: Port
+    default: 587
+    type: int
+    group: Mail Settings
+  - variable: passbolt.email.tls
+    label: Use TLS
+    default: true
+    type: boolean
+    group: Mail Settings
+  - variable: passbolt.email.authentication
+    label: Use Authentication
+    default: false
+    type: boolean
+    group: Mail Settings
+    show_subquestion_if: true
+    subquestions:
+      - variable: passbolt.email.username
+        label: Username
+        default: passbolt@example.org
+        type: string
+      - variable: passbolt.email.password_as_secret
+        label: Use Secret as Password
+        default: false
+        type: boolean
+      - variable: passbolt.email.password
+        label: Password
+        type: password
+        show_if: "passbolt.email.password_as_secret=false"
+      - variable: passbolt.email.password_secret
+        label: Password Secret
+        type: secret
+        show_if: "passbolt.email.password_as_secret=true"
+
+  - variable: mysql.enabled
+    label: Provision MySQL
+    default: true
+    type: boolean
+    group: MySQL
+  - variable: passbolt.datasource.host
+    label: Host
+    type: hostname
+    group: MySQL
+    show_if: "mysql.enabled=false"
+  - variable: passbolt.datasource.username
+    label: Username
+    type: string
+    group: MySQL
+    show_if: "mysql.enabled=false"
+  - variable: passbolt.datasource.password_as_secret
+    label: Use Secret as Password
+    default: false
+    type: boolean
+    group: MySQL
+  - variable: passbolt.datasource.password
+    label: Password
+    type: password
+    group: MySQL
+    show_if: "passbolt.datasource.password_as_secret=false"
+  - variable: passbolt.datasource.password_secret
+    label: Password Secret
+    type: secret
+    group: MySQL
+    show_if: "passbolt.datasource.password_as_secret=true"
+  - variable: mysql.persistence.enabled
+    label: Enable Persistence
+    type: boolean
+    default: false
+    group: MySQL
+    show_if: "mysql.enabled=true"
+    show_subquestion_if: true
+    subquestions:
+      - variable: mysql.persistence.use_existingClaim
+        label: Use Existing Claim
+        type: boolean
+        default: false
+      - variable: mysql.persistence.existingClaim
+        label: Existing Claim
+        type: pvc
+        show_if: "mysql.persistence.use_existingClaim=true"
+      - variable: mysql.persistence.size
+        label: Storage Size
+        default: 2Gi
+        type: string
+        show_if: "mysql.persistence.use_existingClaim=false"
+      - variable: mysql.persistence.storageClassName
+        label: Storage Class
+        type: storageclass
+        show_if: "mysql.persistence.use_existingClaim=false"
+      - variable: mysql.persistence.accessMode
+        label: Access Mode
+        type: enum
+        options:
+          - ReadWriteOnce
+          - ReadOnlyMany
+          - ReadWriteMany
+          - ReadWriteOncePod
+        show_if: "mysql.persistence.use_existingClaim=false"
+
+  - variable: certmanager.enabled
+    label: Use cert-manager
+    default: true
+    type: boolean
+    group: Certificate
+    show_subquestions_if: true
+    subquestions:
+      - variable: certmanager.issuerType
+        label: Issuer Type
+        default: ClusterIssuer
+        type: enum
+        options:
+          - Issuer
+          - ClusterIssuer
+      - variable: certmanager.issuerName
+        label: Issuer Name
+        default: letsencrypt
+        type: string
+  - variable: certificateSecret
+    label: Certificate Secret
+    type: secret
+    show_if: "certmanager.enabled=false"
+    group: Certificate

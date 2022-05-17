@@ -1,0 +1,15 @@
+{{- if and .Values.ingress.enabled .Values.certmanager.enabled }}
+apiVersion: {{ .Values.certmanager.apiVersion }}
+kind: Certificate
+metadata:
+  name: {{ include "asn2ip.fullname" . }}-certificate
+spec:
+  secretName: {{ include "asn2ip.fullname" . }}-certificate
+  # re-new certificate when it expires in less than 60 days
+  renewBefore: 1440h0m0s
+  commonName: {{ .Values.hostname }}
+  dnsNames: [{{ .Values.hostname }}]
+  issuerRef:
+    kind: {{ .Values.certmanager.issuerType }}
+    name: {{ .Values.certmanager.issuerName }}
+{{- end }}

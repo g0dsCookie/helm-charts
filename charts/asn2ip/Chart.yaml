@@ -1,0 +1,13 @@
+apiVersion: v2
+name: asn2ip
+description: asn2ip is a helper tool to fetch all ip networks for specified AS numbers
+type: application
+version: 0.1.0
+appVersion: "1.1.0"
+home: "https://github.com/g0dsCookie/asn2ip"
+keywords:
+  - asn2ip
+sources:
+  - https://github.com/g0dsCookie/asn2ip
+maintainers:
+  - name: g0dsCookie

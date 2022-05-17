@@ -45,4 +45,36 @@ entries:
     urls:
     - https://github.com/g0dsCookie/helm-charts/releases/download/archisteamfarm-0.1.0/archisteamfarm-0.1.0.tgz
     version: 0.1.0
+  icinga2:
+  - apiVersion: v2
+    appVersion: 2.13.3.1
+    created: "2022-05-17T12:01:33.572338448Z"
+    description: Icinga is a monitoring system which checks the availability of your network resources, notifies users of outages, and generates performance data for reporting.
+    digest: 329a2fb3455918b22c850ae6df0baaf381f0827e77b0f5e5e6ff8807b7581461
+    icon: https://icinga.com/docs/icinga-2/latest/assets/images/favicon.png
+    name: icinga2
+    type: application
+    urls:
+    - https://github.com/g0dsCookie/helm-charts/releases/download/icinga2-0.1.0/icinga2-0.1.0.tgz
+    version: 0.1.0
+  passbolt:
+  - apiVersion: v2
+    appVersion: 3.5.0
+    created: "2022-05-17T12:01:33.744077085Z"
+    description: The password manager your team was waiting for. Free, open source, self-hosted, extensible, OpenPGP based.
+    digest: cc4f512419ccadbf1b460ecb6f0f11f7943239834116f4511d6bdbf26e754d19
+    home: https://passbolt.com
+    icon: https://passbolt.com/favicon.ico
+    keywords:
+    - passbolt
+    - password
+    maintainers:
+    - name: g0dsCookie
+    name: passbolt
+    sources:
+    - https://passbolt.com
+    type: application
+    urls:
+    - https://github.com/g0dsCookie/helm-charts/releases/download/passbolt-0.1.0/passbolt-0.1.0.tgz
+    version: 0.1.0
 generated: "2022-05-01T17:52:03.376318866Z"

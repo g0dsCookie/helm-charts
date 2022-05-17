@@ -45,6 +45,24 @@ entries:
     urls:
     - https://github.com/g0dsCookie/helm-charts/releases/download/archisteamfarm-0.1.0/archisteamfarm-0.1.0.tgz
     version: 0.1.0
+  asn2ip:
+  - apiVersion: v2
+    appVersion: 1.1.0
+    created: "2022-05-17T18:07:15.320680042Z"
+    description: asn2ip is a helper tool to fetch all ip networks for specified AS numbers
+    digest: 7e623a1937ab92fbdb3c56be500fd5c7277529b9b5880f4e76afdc20d1dcfdee
+    home: https://github.com/g0dsCookie/asn2ip
+    keywords:
+    - asn2ip
+    maintainers:
+    - name: g0dsCookie
+    name: asn2ip
+    sources:
+    - https://github.com/g0dsCookie/asn2ip
+    type: application
+    urls:
+    - https://github.com/g0dsCookie/helm-charts/releases/download/asn2ip-0.1.1/asn2ip-0.1.1.tgz
+    version: 0.1.1
   passbolt:
   - apiVersion: v2
     appVersion: 3.5.0

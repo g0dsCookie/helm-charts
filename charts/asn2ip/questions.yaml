@@ -1,0 +1,33 @@
+categories:
+  - asn2ip
+questions:
+  - variable: hostname
+    label: Hostname
+    default: ""
+    required: true
+    type: hostname
+    group: ASN2IP
+
+  - variable: certmanager.enabled
+    label: Use cert-manager
+    default: true
+    type: boolean
+    group: Certificate
+    show_subquestions_if: true
+    subquestions:
+      - variable: certmanager.issuerType
+        label: Issuer Type
+        default: ClusterIssuer
+        type: enum
+        options:
+          - Issuer
+          - ClusterIssuer
+      - variable: certmanager.issuerName
+        label: Issuer Name
+        default: letsencrypt
+        type: string
+  - variable: certificateSecret
+    label: Certificate Secret
+    type: secret
+    show_if: "certmanager.enabled=false"
+    group: Certificate

@@ -1,21 +1,32 @@
+{{- $name := include "archisteamfarm.fullname" . -}}
+{{- $secret := lookup "v1" "Secret" .Release.Namespace "$name-secrets" -}}
+
+{{- $ipcpassword := randAlphaNum 32 | b64enc -}}
+{{- if $secret -}}
+{{- $ipcpassword := $secret.data.ipc -}}
+{{- end -}}
+
+{{- $asf := dict "IPCPassword" $ipcpassword "SteamOwnerID" .Values.steamId "Headless" true -}}
+{{- $ipc := dict "Kestrel" (dict "Endpoints" (dict "HTTP" (dict "Url" "http://*:1242"))) -}}
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ include "archisteamfarm.fullname" . }}-secrets
+  labels:
+    {{- include "archisteamfarm.labels" . | nindent 4 }}
+type: Opaque
+data:
+  ipc: {{ $ipcpassword | quote }}
+
+---
+
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ include "archisteamfarm.fullname" . }}-init-config
 data:
   ASF.json: |
-    {
-      "IPCPassword": {{ .Values.initialPassword | quote }},
-      "SteamOwnerID": {{ .Values.steamId }},
-      "Headless": true
-    }
+    {{ $asf | toJson }}
   IPC.config: |
-    {
-      "Kestrel": {
-        "Endpoints": {
-          "HTTP": {
-            "Url": "http://*:1242"
-          }
-        }
-      }
-    }
+    {{ $ipc | toJson }}

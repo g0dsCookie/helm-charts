@@ -13,9 +13,6 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
-# initial password for ipc
-# can be changed later in ui
-initialPassword: ""
 # your steam id, used by archisteamfarm to do steam requests
 steamId: "0"
 # your asf hostname

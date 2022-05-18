@@ -1,0 +1,7 @@
+Thank you for installing {{ .Chart.Name }}. Your release is named {{ .Release.Name }}.
+
+You can now access ArchiSteamFarm via https://{{ .Values.hostname }}
+
+To get your IPC password run:
+
+    kubectl get secrets --namespace {{ .Release.Namespace }} {{ include "archisteamfarm.fullname" . }}-secrets -o jsonpath="{.data.ipc}" | base64 -d

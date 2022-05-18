@@ -3,6 +3,26 @@ entries:
   archisteamfarm:
   - apiVersion: v2
     appVersion: 5.2.5.4
+    created: "2022-05-18T08:20:35.372128659Z"
+    description: C# application with primary purpose of farming Steam cards from multiple accounts simultaneously.
+    digest: 9f8ba56d793e4784eb90ac134a2a0b6ed0a76ed30f9ab9207b32bcab836a9244
+    home: https://github.com/JustArchiNET/ArchiSteamFarm
+    icon: https://justarchinet.github.io/ASF-WebConfigGenerator/media/logo.png
+    keywords:
+    - archisteamfarm
+    - steam
+    - games
+    maintainers:
+    - name: g0dsCookie
+    name: archisteamfarm
+    sources:
+    - https://github.com/JustArchiNET/ArchiSteamFarm
+    type: application
+    urls:
+    - https://github.com/g0dsCookie/helm-charts/releases/download/archisteamfarm-0.2.3/archisteamfarm-0.2.3.tgz
+    version: 0.2.3
+  - apiVersion: v2
+    appVersion: 5.2.5.4
     created: "2022-05-02T15:31:22.078801111Z"
     description: C# application with primary purpose of farming Steam cards from multiple accounts simultaneously.
     digest: 3a7a26539940f63bd429b106fd7b8cac252876d4596750c65da219af7bd8f0da
@@ -48,6 +68,23 @@ entries:
   asn2ip:
   - apiVersion: v2
     appVersion: 1.1.0
+    created: "2022-05-18T08:20:35.477811993Z"
+    description: asn2ip is a helper tool to fetch all ip networks for specified AS numbers
+    digest: f1c9782fe5f9dcbacfc60e400110a17ac2799fe7fdf375c781c0b41ef914acac
+    home: https://github.com/g0dsCookie/asn2ip
+    keywords:
+    - asn2ip
+    maintainers:
+    - name: g0dsCookie
+    name: asn2ip
+    sources:
+    - https://github.com/g0dsCookie/asn2ip
+    type: application
+    urls:
+    - https://github.com/g0dsCookie/helm-charts/releases/download/asn2ip-0.2.0/asn2ip-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v2
+    appVersion: 1.1.0
     created: "2022-05-17T18:07:15.320680042Z"
     description: asn2ip is a helper tool to fetch all ip networks for specified AS numbers
     digest: 7e623a1937ab92fbdb3c56be500fd5c7277529b9b5880f4e76afdc20d1dcfdee
@@ -64,6 +101,25 @@ entries:
     - https://github.com/g0dsCookie/helm-charts/releases/download/asn2ip-0.1.1/asn2ip-0.1.1.tgz
     version: 0.1.1
   passbolt:
+  - apiVersion: v2
+    appVersion: 3.5.0
+    created: "2022-05-18T08:20:35.595237508Z"
+    description: The password manager your team was waiting for. Free, open source, self-hosted, extensible, OpenPGP based.
+    digest: e3894cc4606a49938b3b0bfa1603fc9c5caf3b86e2e020d13553f3ed0a8a91ec
+    home: https://passbolt.com
+    icon: https://passbolt.com/favicon.ico
+    keywords:
+    - passbolt
+    - password
+    maintainers:
+    - name: g0dsCookie
+    name: passbolt
+    sources:
+    - https://passbolt.com
+    type: application
+    urls:
+    - https://github.com/g0dsCookie/helm-charts/releases/download/passbolt-0.1.2/passbolt-0.1.2.tgz
+    version: 0.1.2
   - apiVersion: v2
     appVersion: 3.5.0
     created: "2022-05-17T18:01:20.841725905Z"

@@ -121,6 +121,8 @@ mysql:
     size: 2Gi
     existingClaim: ""
 
+  customConfigMap: ""
+
 ingress:
   enabled: true
   className: ""

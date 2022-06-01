@@ -53,6 +53,11 @@ spec:
             - name: data
               mountPath: /var/lib/mysql
             {{- end }}
+            {{- if .Values.mysql.customConfigMap }}
+            - name: config
+              mountPath: /etc/mysql/conf.d
+              readOnly: true
+            {{- end }}
           resources:
             {{- toYaml .Values.mysql.resources | nindent 12 }}
           securityContext:
@@ -62,6 +67,12 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: {{ default (printf "%s-mysql" (include "passbolt.fullname" .)) .Values.mysql.persistence.existingClaim | quote }}
+        {{- end }}
+        {{- if .Values.mysql.customConfigMap }}
+        - name: config
+          configMap:
+            name: {{ .Values.mysql.customConfigMap }}
+            defaultMode: 420
         {{- end }}
       {{- with .Values.mysql.nodeSelector }}
       nodeSelector:

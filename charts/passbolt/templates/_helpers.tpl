@@ -62,8 +62,7 @@ Create the name of the service account to use
 {{- end }}
 
 {{- define "passbolt.secrets" -}}
-{{- $name := include "passbolt.fullname" . -}}
-{{- $secret := lookup "v1" "Secret" .Release.Namespace "$name-secrets" -}}
+{{- $secret := lookup "v1" "Secret" .Release.Namespace (printf "%s-secrets" (include "passbolt.fullname" .)) -}}
 {{- if $secret -}}
 salt: {{ $secret.data.salt }}
 {{- if .Values.mysql.enabled }}

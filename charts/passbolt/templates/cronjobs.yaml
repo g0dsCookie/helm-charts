@@ -1,0 +1,100 @@
+{{- if .Values.cronjobs.mysql.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "passbolt.fullname" . }}-cronjob-mysql
+  labels:
+    {{- include "passbolt.labels" . | nindent 4 }}
+spec:
+  schedule: "{{ .Values.cronjobs.mysql.schedule }}"
+  jobTemplate:
+    metadata:
+      {{- with .Values.cronjobs.mysql.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "passbolt.selectorLabels" . | nindent 8 }}
+        helm.sh/app: passbolt-cronjob-mysql
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: cleanup-actionlog-auth
+              image: "{{ .Values.mysql.image.repository }}:{{ .Values.mysql.image.tag }}"
+              imagePullPolicy: {{ .Values.mysql.image.pullPolicy }}
+              command: [sh]
+              args:
+                - '-c'
+                - mysql -u$DATASOURCES_DEFAULT_USERNAME -p$DATASOURCES_DEFAULT_PASSWORD -h $DATASOURCES_DEFAULT_HOST $DATASOURCES_DEFAULT_DATABASE -e "DELETE FROM action_logs WHERE action_id='11ed2b2c-9ade-50b3-9bbb-68232d5dc5d7' AND created < NOW() - INTERVAL {{ .Values.cronjobs.mysql.keep.action_log.auth }}"
+              env:
+                {{- if .Values.mysql.enabled }}
+                - name: DATASOURCES_DEFAULT_HOST
+                  value: "passbolt-mysql"
+                - name: DATASOURCES_DEFAULT_USERNAME
+                  value: "passbolt"
+                - name: DATASOURCES_DEFAULT_DATABASE
+                  value: "passbolt"
+                - name: DATASOURCES_DEFAULT_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: "{{ include "passbolt.fullname" . }}-secrets"
+                      key: mysql
+                {{- else }}
+                - name: DATASOURCES_DEFAULT_HOST
+                  value: {{ .Values.passbolt.datasource.host | quote }}
+                - name: DATASOURCES_DEFAULT_USERNAME
+                  value: {{ .Values.passbolt.datasource.username | quote }}
+                - name: DATASOURCES_DEFAULT_DATABASE
+                  value: {{ .Values.passbolt.datasource.database | quote }}
+                - name: DATASOURCES_DEFAULT_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: "{{ .Values.passbolt.datasource.password_secret }}"
+                      key: "{{ .Values.passbolt.datasource.password_secret_key }}"
+                {{- end }}
+              resources:
+                requests:
+                  memory: 256Mi
+                limits:
+                  memory: 256Mi
+            - name: cleanup-actionlog
+              image: "{{ .Values.mysql.image.repository }}:{{ .Values.mysql.image.tag }}"
+              imagePullPolicy: {{ .Values.mysql.image.pullPolicy }}
+              command: [sh]
+              args:
+                - '-c'
+                - mysql -u$DATASOURCES_DEFAULT_USERNAME -p$DATASOURCES_DEFAULT_PASSWORD -h $DATASOURCES_DEFAULT_HOST $DATASOURCES_DEFAULT_DATABASE -e "DELETE FROM action_logs WHERE created < NOW() - INTERVAL {{ .Values.cronjobs.mysql.keep.action_log.all }}"
+              env:
+                {{- if .Values.mysql.enabled }}
+                - name: DATASOURCES_DEFAULT_HOST
+                  value: "passbolt-mysql"
+                - name: DATASOURCES_DEFAULT_USERNAME
+                  value: "passbolt"
+                - name: DATASOURCES_DEFAULT_DATABASE
+                  value: "passbolt"
+                - name: DATASOURCES_DEFAULT_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: "{{ include "passbolt.fullname" . }}-secrets"
+                      key: mysql
+                {{- else }}
+                - name: DATASOURCES_DEFAULT_HOST
+                  value: {{ .Values.passbolt.datasource.host | quote }}
+                - name: DATASOURCES_DEFAULT_USERNAME
+                  value: {{ .Values.passbolt.datasource.username | quote }}
+                - name: DATASOURCES_DEFAULT_DATABASE
+                  value: {{ .Values.passbolt.datasource.database | quote }}
+                - name: DATASOURCES_DEFAULT_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: "{{ .Values.passbolt.datasource.password_secret }}"
+                      key: "{{ .Values.passbolt.datasource.password_secret_key }}"
+                {{- end }}
+              resources:
+                requests:
+                  memory: 256Mi
+                limits:
+                  memory: 256Mi
+{{- end }}

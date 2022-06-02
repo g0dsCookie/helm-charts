@@ -123,6 +123,16 @@ mysql:
 
   customConfigMap: ""
 
+cronjobs:
+  mysql:
+    enabled: true
+    podAnnotations: {}
+    schedule: "0 0 * * *"
+    keep:
+      action_log:
+        auth: "2 WEEK"
+        all: "6 MONTH"
+
 ingress:
   enabled: true
   className: ""

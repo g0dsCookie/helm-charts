@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "aptly.fullname" . }}
+  labels:
+    {{- include "aptly.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "aptly.selectorLabels" . | nindent 6 }}
+      helm.sh/app: aptly
+  template:
+    metadata:
+      {{- with .Values.aptly.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "aptly.selectorLabels" . | nindent 8 }}
+        helm.sh/app: aptly
+    spec:
+      {{- with .Values.aptly.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.aptly.podSecurityContext | nindent 8 }}
+      containers:
+        - name: aptly
+          securityContext:
+            {{- toYaml .Values.aptly.securityContext | nindent 12 }}
+          image: "{{ .Values.aptly.image.repository }}:{{ .Values.aptly.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.aptly.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /api/version
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /api/version
+              port: http
+          resources:
+            {{- toYaml .Values.aptly.resources | nindent 12 }}
+          volumeMounts:
+            - name: data
+              mountPath: /data
+            - name: config
+              mountPath: /etc/aptly.conf
+              subPath: aptly.conf
+              readOnly: true
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (include "aptly.fullname" .) }}
+        - name: config
+          configMap:
+            name: {{ include "aptly.fullname" . }}-config
+      {{- with .Values.aptly.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.aptly.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.aptly.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

@@ -1,0 +1,34 @@
+{{- $aptly := dict "rootDir" "/data"
+                   "downloadConcurrency" .Values.config.downloadConcurrency
+                   "downloadSpeedLimit" .Values.config.downloadSpeedLimit
+                   "downloadRetries" .Values.config.downloadRetries
+                   "downloader" "default"
+                   "databaseOpenAttempts" .Values.config.databaseOpenAttempts
+                   "architectures" .Values.config.architectures
+                   "dependencyFollowSuggests" .Values.config.dependencyFollowSuggests
+                   "dependencyFollowRecommends" .Values.config.dependencyFollowRecommends
+                   "dependencyFollowAllVariants" .Values.config.dependencyFollowAllVariants
+                   "dependencyFollowSource" .Values.config.dependencyFollowSource
+                   "dependencyVerboseResolve" .Values.config.dependencyVerboseResolve
+                   "gpgDisableSign" .Values.config.gpgDisableSign
+                   "gpgDisableVerify" .Values.config.gpgDisableVerify
+                   "gpgProvider" "gpg"
+                   "downloadSourcePackages" .Values.config.downloadSourcePackages
+                   "skipLegacyPool" true
+                   "ppaDistributorID" .Values.config.ppaDistributorID
+                   "ppaCodename" .Values.config.ppaCodename
+                   "skipContentsPublishing" false
+                   "FileSystemPublishEndpoints" (dict)
+                   "S3PublishEndpoints" (dict)
+                   "SwiftPublishEndpoints" (dict)
+                   "AzurePublishEndpoints" (dict)
+                   "AsyncAPI" false
+                   "enableMetricsEndpoint" .Values.config.enableMetricsEndpoint -}}
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "aptly.fullname" . }}-config
+data:
+  aptly.conf: |
+    {{ $aptly | toJson }}

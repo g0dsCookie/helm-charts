@@ -1,0 +1,136 @@
+nameOverride: ""
+fullnameOverride: ""
+
+config:
+  downloadConcurrency: 4
+  downloadSpeedLimit: 0
+  downloadRetries: 0
+
+  databaseOpenAttempts: -1
+
+  architectures: []
+
+  dependencyFollowSuggests: false
+  dependencyFollowRecommends: false
+  dependencyFollowAllVariants: false
+  dependencyFollowSource: false
+  dependencyVerboseResolve: false
+
+  gpgDisableSign: false
+  gpgDisableVerify: false
+
+  downloadSourcePackages: false
+
+  ppaDistributorID: ""
+  ppaCodename: ""
+
+  enableMetricsEndpoint: false
+
+aptly:
+  image:
+    repository: ghcr.io/g0dscookie/aptly
+    pullPolicy: Always
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ""
+  imagePullSecrets: []
+
+  podAnnotations: {}
+  podSecurityContext: {}
+    # fsGroup: 2000
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+  resources: {}
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+
+  service:
+    type: ClusterIP
+    port: 8080
+
+  # you really want to enable basic auth on this ingress rule
+  # otherwise anyone could upload packages to your aptly instance
+  # 
+  # check your ingress controller documentation on how to do this
+  # i.e. nginx: https://kubernetes.github.io/ingress-nginx/examples/auth/basic/
+  ingress:
+    enabled: false
+    hostname: aptly.example.org
+    className: ""
+    annotations: {}
+      # kubernetes.io/ingress.class: nginx
+      # kubernetes.io/tls-acme: "true"
+    path: /api/
+    tls: []
+
+nginx:
+  image:
+    repository: nginx
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: "1.21"
+  imagePullSecrets: []
+
+  podAnnotations: {}
+  podSecurityContext: {}
+    # fsGroup: 2000
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+  resources: {}
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+
+  service:
+    type: ClusterIP
+    port: 80
+
+  ingress:
+    enabled: false
+    hostname: aptly.example.org
+    className: ""
+    annotations: {}
+      # kubernetes.io/ingress.class: nginx
+      # kubernetes.io/tls-acme: "true"
+    path: /
+    tls: []
+
+persistence:
+  accessMode: ReadWriteOnce
+  storageClassName: ""
+  size: 1Gi
+  existingClaim: ""

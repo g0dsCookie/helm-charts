@@ -31,6 +31,19 @@ spec:
             {{- toYaml .Values.aptly.securityContext | nindent 12 }}
           image: "{{ .Values.aptly.image.repository }}:{{ .Values.aptly.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.aptly.image.pullPolicy }}
+          env:
+            - name: GPG_GENERATE
+              value: "{{ not .Values.config.gpg.disableSign }}"
+            - name: GPG_TYPE
+              value: {{ .Values.config.gpg.type }}
+            - name: GPG_LENGTH
+              value: {{ .Values.config.gpg.length }}
+            - name: GPG_REALNAME
+              value: "{{ .Values.config.gpg.realname }}"
+            - name: GPG_EMAIL
+              value: "{{ .Values.config.gpg.email }}"
+            - name: GPG_EXPIRE
+              value: {{ .Values.config.gpg.expire }}
           ports:
             - name: http
               containerPort: 8080

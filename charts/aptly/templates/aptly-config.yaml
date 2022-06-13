@@ -10,8 +10,8 @@
                    "dependencyFollowAllVariants" .Values.config.dependencyFollowAllVariants
                    "dependencyFollowSource" .Values.config.dependencyFollowSource
                    "dependencyVerboseResolve" .Values.config.dependencyVerboseResolve
-                   "gpgDisableSign" .Values.config.gpgDisableSign
-                   "gpgDisableVerify" .Values.config.gpgDisableVerify
+                   "gpgDisableSign" .Values.config.gpg.disableSign
+                   "gpgDisableVerify" .Values.config.gpg.disableVerify
                    "gpgProvider" "gpg"
                    "downloadSourcePackages" .Values.config.downloadSourcePackages
                    "skipLegacyPool" true

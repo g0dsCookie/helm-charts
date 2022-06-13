@@ -16,8 +16,15 @@ config:
   dependencyFollowSource: false
   dependencyVerboseResolve: false
 
-  gpgDisableSign: false
-  gpgDisableVerify: false
+  gpg:
+    disableSign: false
+    disableVerify: false
+
+    type: default
+    length: default
+    realname: Aptly
+    email: aptly@example.org
+    expire: 0
 
   downloadSourcePackages: false
 

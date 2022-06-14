@@ -20,6 +20,7 @@ config:
     disableSign: false
     disableVerify: false
 
+    generate: true
     type: default
     length: default
     realname: Aptly

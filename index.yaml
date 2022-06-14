@@ -3,6 +3,21 @@ entries:
   aptly:
   - apiVersion: v2
     appVersion: latest
+    created: "2022-06-14T07:02:05.8849477Z"
+    description: Debian repository management tool
+    digest: bc62cfec6d491f3ff92b57d84c8230542c94b9cc6e060fbea06cb5d56b35acf7
+    home: https://www.aptly.info
+    icon: https://www.aptly.info/favicon.ico
+    maintainers:
+    - email: g0dscookie@copr.icu
+      name: g0dsCookie
+    name: aptly
+    type: application
+    urls:
+    - https://github.com/g0dsCookie/helm-charts/releases/download/aptly-0.2.1/aptly-0.2.1.tgz
+    version: 0.2.1
+  - apiVersion: v2
+    appVersion: latest
     created: "2022-06-13T09:07:54.079975321Z"
     description: Debian repository management tool
     digest: 1d98b683f1e7b635265a3f0bcf7e3d42b8e342abf9e212db2ec93cc0358c8fb0

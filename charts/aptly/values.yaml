@@ -134,7 +134,9 @@ nginx:
     annotations: {}
       # kubernetes.io/ingress.class: nginx
       # kubernetes.io/tls-acme: "true"
-    path: /
+    paths:
+      - path: /
+        annotations: {} # for path specific annotations like basic auth per path
     tls: []
 
 persistence:

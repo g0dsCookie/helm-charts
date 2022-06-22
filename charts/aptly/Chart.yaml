@@ -4,7 +4,7 @@ icon: https://www.aptly.info/favicon.ico
 description: Debian repository management tool
 home: https://www.aptly.info
 type: application
-version: 0.2.1
+version: 0.3.0
 # TODO: Change this as soon as a new version is published
 appVersion: "latest"
 maintainers:

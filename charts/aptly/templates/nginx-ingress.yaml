@@ -1,19 +1,28 @@
 {{- if .Values.nginx.ingress.enabled -}}
+
+{{- $fullname := include "aptly.fullname" . -}}
+{{- $labels := include "aptly.labels" . -}}
+{{- $svc := .Values.nginx.service -}}
+{{- $ingress := .Values.nginx.ingress -}}
+
+{{- range $idx, $val := .Values.nginx.ingress.paths }}
+---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ include "aptly.fullname" . }}-public
+  name: "{{ $fullname }}-public-{{ $idx }}"
   labels:
-    {{- include "aptly.labels" . | nindent 4 }}
-  {{- with .Values.nginx.ingress.annotations }}
+    {{- $labels | nindent 4 }}
+  {{- $annotations := merge ($val.annotations | default dict) $ingress.annotations -}}
+  {{- with $annotations }}
   annotations:
-    {{- toYaml . | nindent 4 }}
+    {{- . | toYaml |  nindent 4 }}
   {{- end }}
 spec:
-  ingressClassName: {{ .Values.nginx.ingress.className }}
-  {{- if .Values.nginx.ingress.tls }}
+  ingressClassName: {{ $ingress.className }}
+  {{- if $ingress.tls }}
   tls:
-    {{- range .Values.nginx.ingress.tls }}
+    {{- range $ingress.tls }}
     - hosts:
         {{- range .hosts }}
         - {{ . | quote }}
@@ -22,14 +31,15 @@ spec:
     {{- end }}
   {{- end }}
   rules:
-    - host: {{ .Values.nginx.ingress.hostname }}
+    - host: {{ $ingress.hostname }}
       http:
         paths:
-          - path: {{ .Values.nginx.ingress.path }}
+          - path: {{ $val.path }}
             pathType: ImplementationSpecific
             backend:
               service:
-                name: {{ include "aptly.fullname" . }}-public
+                name: {{ $fullname }}-public
                 port:
-                  number: {{ .Values.nginx.service.port }}
+                  number: {{ $svc.port }}
+{{- end }}
 {{- end }}

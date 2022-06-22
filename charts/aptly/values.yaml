@@ -34,6 +34,13 @@ config:
 
   enableMetricsEndpoint: false
 
+crons:
+  update_mirrors:
+    enabled: false
+    podAnnotations: {}
+    resources: {}
+    schedule: "0 0 * * *"
+
 aptly:
   image:
     repository: ghcr.io/g0dscookie/aptly

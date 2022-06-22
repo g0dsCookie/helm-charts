@@ -1,0 +1,47 @@
+{{- if .Values.crons.update_mirrors.enabled }}
+{{- $image := printf "%s:%s" .Values.aptly.image.repository (.Values.aptly.image.tag | default .Chart.AppVersion) -}}
+{{- $imagePullPolicy := .Values.aptly.image.pullPolicy -}}
+{{- $resources := .Values.crons.update_mirrors.resources -}}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "aptly.fullname" . }}-update-mirrors
+  labels:
+    {{- include "aptly.labels" . | nindent 4 }}
+spec:
+  schedule: "{{ .Values.crons.update_mirrors.schedule }}"
+  jobTemplate:
+    metadata:
+      {{- with .Values.crons.update_mirrors.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "aptly.selectorLabels" . | nindent 8 }}
+        helm.sh/app: aptly-update-mirrors
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: aptly
+              image: "{{ $image }}"
+              imagePullPolicy: {{ $imagePullPolicy }}
+              command: [/mirror-update.sh]
+              resources:
+                {{- toYaml $resources | nindent 16 }}
+              volumeMounts:
+                - name: data
+                  mountPath: /data
+                - name: config
+                  mountPath: /etc/aptly.conf
+                  subPath: aptly.conf
+                  readOnly: true
+          volumes:
+            - name: data
+              persistentVolumeClaim:
+                claimName: {{ .Values.persistence.existingClaim | default (include "aptly.fullname" .) }}
+            - name: config
+              configMap:
+                name: {{ include "aptly.fullname" . }}-config
+{{- end }}

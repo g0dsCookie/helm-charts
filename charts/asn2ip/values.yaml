@@ -13,13 +13,13 @@ podAnnotations: {}
 podSecurityContext: {}
   # fsGroup: 2000
 
-securityContext: {}
+securityContext:
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 65534
   # capabilities:
   #   drop:
   #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
 
 service:
   type: ClusterIP
@@ -31,13 +31,6 @@ ingress:
   annotations: {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
-
-# certmanager settings
-certmanager:
-  enabled: true
-  issuerType: ClusterIssuer
-  issuerName: letsencrypt
-  apiVersion: cert-manager.io/v1
 
 hostname: "asn.example.org"
 certificateSecret: ""

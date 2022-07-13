@@ -164,6 +164,23 @@ entries:
   asn2ip:
   - apiVersion: v2
     appVersion: 1.1.0
+    created: "2022-07-13T11:30:34.122530457Z"
+    description: asn2ip is a helper tool to fetch all ip networks for specified AS numbers
+    digest: 78e6a26ae6050cb6017efc8931f036a7462676991244fde015f0b71110b1976b
+    home: https://github.com/g0dsCookie/asn2ip
+    keywords:
+    - asn2ip
+    maintainers:
+    - name: g0dsCookie
+    name: asn2ip
+    sources:
+    - https://github.com/g0dsCookie/asn2ip
+    type: application
+    urls:
+    - https://github.com/g0dsCookie/helm-charts/releases/download/asn2ip-0.3.0/asn2ip-0.3.0.tgz
+    version: 0.3.0
+  - apiVersion: v2
+    appVersion: 1.1.0
     created: "2022-05-18T08:20:35.477811993Z"
     description: asn2ip is a helper tool to fetch all ip networks for specified AS numbers
     digest: f1c9782fe5f9dcbacfc60e400110a17ac2799fe7fdf375c781c0b41ef914acac

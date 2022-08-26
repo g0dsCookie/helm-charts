@@ -1,0 +1,66 @@
+{{- $name := include "icinga2.fullname" . -}}
+{{- $secretName := printf "%s-secrets" $name -}}
+{{- $secret := lookup "v1" "Secret" .Release.Namespace "$secretName" -}}
+
+{{- $salt := randAlphaNum 32 | b64enc -}}
+{{- if and .Values.master $secret -}}
+{{- $salt := $secret.data.salt -}}
+{{- end -}}
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ $secretName }}
+  labels:
+    {{- include "icinga2.labels" . | nindent 4 }}
+type: Opaque
+data:
+  {{- if .Values.master }}
+  salt: {{ $salt }}
+  {{- end }}
+  {{- if .Values.icinga_ca.pki }}
+  pki: {{ .Values.icinga_ca.pki }}
+  {{- end }}
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "icinga2.fullname" . }}-config
+data:
+  icinga2.yaml: |
+    node:
+      name: {{ .Values.nodeName }}
+      {{- if .Values.parent }}
+      zone: true
+      parent: {{ .Values.parent }}
+      {{- else }}
+      zone: false
+      {{- end }}
+    {{- if .Values.icinga_ca.host }}
+    ca:
+      host: {{ .Values.icinga_ca.host }}
+      port: {{ .Values.icinga_ca.port }}
+    {{- end }}
+    {{- if .Values.master }}
+    ticketsalt: {{ $salt }}
+    {{- end }}
+    {{- if .Values.endpoints }}
+    endpoints:
+    {{- .Values.endpoints | toYaml | nindent 6 }}
+    {{- end }}
+    {{- if .Values.zones }}
+    zones:
+    {{- .Values.zones | toYaml | nindent 6 }}
+    {{- end }}
+    features:
+    {{- .Values.features | toYaml | nindent 6 }}
+    api:
+      listen: 0.0.0.0
+      port: 5665
+      accept_config: {{ .Values.api.accept_config }}
+      accept_commands: {{ .Values.api.accept_commands }}
+      {{- if .Values.api.users }}
+      users:
+      {{- .Values.api.users | toYaml | nindent 8 }}
+      {{- end }}

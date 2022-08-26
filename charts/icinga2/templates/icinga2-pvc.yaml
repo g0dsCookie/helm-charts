@@ -1,0 +1,19 @@
+{{- if .Values.icinga2.persistence.enabled -}}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "icinga2.fullname" . }}-data
+  {{- with .Values.icinga2.persistence.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    - {{ .Values.icinga2.persistence.accessMode }}
+  resources:
+    requests:
+      storage: {{ .Values.icinga2.persistence.size }}
+  {{- if .Values.icinga2.persistence.storageClass }}
+  storageClassName: {{ .Values.icinga2.persistence.storageClass }}
+  {{- end }}
+{{- end -}}

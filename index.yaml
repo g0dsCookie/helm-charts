@@ -213,6 +213,18 @@ entries:
     urls:
     - https://github.com/g0dsCookie/helm-charts/releases/download/asn2ip-0.1.1/asn2ip-0.1.1.tgz
     version: 0.1.1
+  icinga2:
+  - apiVersion: v2
+    appVersion: 2.13.5
+    created: "2022-09-21T11:40:15.010354751Z"
+    description: Icinga is a monitoring system which checks the availability of your network resources, notifies users of outages, and generates performance data for reporting.
+    digest: a2f5752c07ef654a2c13540b7cbf7a118dd9ccfdb7bb48432f47d6f1ced5dc88
+    icon: https://icinga.com/docs/icinga-2/latest/assets/images/favicon.png
+    name: icinga2
+    type: application
+    urls:
+    - https://github.com/g0dsCookie/helm-charts/releases/download/icinga2-0.1.0/icinga2-0.1.0.tgz
+    version: 0.1.0
   passbolt:
   - apiVersion: v2
     appVersion: 3.6.0-1

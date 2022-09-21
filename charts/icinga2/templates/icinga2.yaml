@@ -34,7 +34,7 @@ spec:
             - name: ICINGA_CA_NODE
               value: {{ .Values.icinga_ca.host }}
             - name: ICINGA_CA_PORT
-              value: {{ .Values.icinga_ca.port }}
+              value: {{ .Values.icinga_ca.port | quote }}
             {{- if .Values.icinga_ca.pki }}
             - name: ICINGA_PKI
               valueFrom:

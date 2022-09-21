@@ -1,2 +1,3 @@
 # ignore local debug files
 overrides.yaml
+.helmpreview

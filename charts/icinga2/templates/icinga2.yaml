@@ -49,10 +49,12 @@ spec:
               protocol: TCP
           livenessProbe:
             httpGet:
+              scheme: HTTPS
               path: /
               port: api
           readinessProbe:
             httpGet:
+              scheme: HTTPS
               path: /
               port: api
           resources:

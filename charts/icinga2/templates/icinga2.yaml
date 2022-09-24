@@ -8,6 +8,8 @@ spec:
   selector:
     matchLabels:
       {{- include "icinga2.selectorLabels" . | nindent 6 }}
+  strategy:
+    type: Recreate
   template:
     metadata:
       {{- with .Values.icinga2.podAnnotations }}
@@ -47,16 +49,6 @@ spec:
             - name: api
               containerPort: 5665
               protocol: TCP
-          livenessProbe:
-            httpGet:
-              scheme: HTTPS
-              path: /
-              port: api
-          readinessProbe:
-            httpGet:
-              scheme: HTTPS
-              path: /
-              port: api
           resources:
             {{- toYaml .Values.icinga2.resources | nindent 12 }}
           volumeMounts:

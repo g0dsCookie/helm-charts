@@ -2,6 +2,7 @@ nameOverride: ""
 fullnameOverride: ""
 
 nodeName:
+nodeZone: true
 parent:
 master: true
 endpoints: []

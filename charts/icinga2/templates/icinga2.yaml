@@ -25,6 +25,9 @@ spec:
       {{- end }}
       securityContext:
         {{- toYaml .Values.icinga2.podSecurityContext | nindent 8 }}
+      {{- if .Values.icinga2.service.hostNetwork }}
+      hostNetwork: true
+      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:

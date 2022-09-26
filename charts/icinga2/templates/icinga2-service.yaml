@@ -1,3 +1,4 @@
+{{- if not .Values.icinga2.service.hostNetwork -}}
 apiVersion: v1
 kind: Service
 metadata:
@@ -17,3 +18,4 @@ spec:
   externalIPs:
     {{- .Values.icinga2.service.externalIPs | toYaml | nindent 4 }}
   {{- end }}
+{{- end -}}

@@ -32,7 +32,7 @@ data:
     node:
       name: {{ .Values.nodeName }}
       {{- if .Values.parent }}
-      zone: {% if .Vales.nodeZone %}true{% else %}false{% endif %}
+      zone: {{ .Values.nodeZone }}
       parent: {{ .Values.parent }}
       {{- else }}
       zone: false

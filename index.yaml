@@ -216,6 +216,17 @@ entries:
   icinga2:
   - apiVersion: v2
     appVersion: 2.13.5
+    created: "2022-09-26T10:28:41.722621376Z"
+    description: Icinga is a monitoring system which checks the availability of your network resources, notifies users of outages, and generates performance data for reporting.
+    digest: 38c335b7a60a75051fe9350001b2ca529ca534106da57b008bf5a05c5c879a83
+    icon: https://icinga.com/docs/icinga-2/latest/assets/images/favicon.png
+    name: icinga2
+    type: application
+    urls:
+    - https://github.com/g0dsCookie/helm-charts/releases/download/icinga2-0.1.5/icinga2-0.1.5.tgz
+    version: 0.1.5
+  - apiVersion: v2
+    appVersion: 2.13.5
     created: "2022-09-26T10:22:28.248624017Z"
     description: Icinga is a monitoring system which checks the availability of your network resources, notifies users of outages, and generates performance data for reporting.
     digest: 33a32890a76f7ec7dd68ea832e796883fcb8802ed33050bb2adc1512dd0b7382

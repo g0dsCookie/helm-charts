@@ -2,8 +2,8 @@ apiVersion: v2
 name: passbolt
 description: "The password manager your team was waiting for. Free, open source, self-hosted, extensible, OpenPGP based."
 type: application
-version: 0.4.1
-appVersion: "3.7.2-1"
+version: 0.5.0
+appVersion: "3.8.3-1"
 home: "https://passbolt.com"
 icon: "https://passbolt.com/favicon.ico"
 keywords:

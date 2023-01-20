@@ -293,6 +293,25 @@ entries:
     version: 0.1.0
   passbolt:
   - apiVersion: v2
+    appVersion: 3.9.0-2
+    created: "2023-01-20T10:07:58.107242478Z"
+    description: The password manager your team was waiting for. Free, open source, self-hosted, extensible, OpenPGP based.
+    digest: bda751b060699736b9fc62676e99e00d64157d8e1b4e717fa4f81432d1773dc7
+    home: https://passbolt.com
+    icon: https://passbolt.com/favicon.ico
+    keywords:
+    - passbolt
+    - password
+    maintainers:
+    - name: g0dsCookie
+    name: passbolt
+    sources:
+    - https://passbolt.com
+    type: application
+    urls:
+    - https://github.com/g0dsCookie/helm-charts/releases/download/passbolt-0.5.2/passbolt-0.5.2.tgz
+    version: 0.5.2
+  - apiVersion: v2
     appVersion: 3.9.0-1
     created: "2023-01-20T08:56:12.523701252Z"
     description: The password manager your team was waiting for. Free, open source, self-hosted, extensible, OpenPGP based.
